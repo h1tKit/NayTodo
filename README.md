@@ -1,49 +1,76 @@
 # NayTodo
 
-一个简洁的待办事项 Flutter 应用。
+EN | 中文
 
-## 为什么做这个项目
+> A clean and simple Flutter todo app. / 一个简洁的待办事项 Flutter 应用。
+
+---
+
+## Why / 为什么做这个项目
+
+I needed a todo list for daily use. Existing apps were either too bloated or not visually appealing enough. I wanted to build one that is simple in function, smooth in interaction, and clean in design — something that serves my own daily needs.
 
 我自己有使用待办清单的需求。现有的待办应用要么功能过于臃肿，要么界面不够美观。我希望做一个功能简洁、交互流畅、界面干净美观的待办应用，满足自己的日常使用。
 
-## 技术栈
+---
 
-| 类别 | 选型 |
-|------|------|
-| 框架 | Flutter (Dart) |
-| 平台 | Android |
+## Features / 功能
+
+- Add, complete, and delete todos / 添加、完成、删除待办事项
+- Long-press to drag and reorder / 长按拖拽排序
+- Swipe left to delete, swipe right for actions / 左滑删除、右滑操作
+- Auto-save via SharedPreferences / 通过 SharedPreferences 自动持久化
+
+---
+
+## Tech Stack / 技术栈
+
+| Category / 类别 | Choice / 选型 |
+|-----------------|---------------|
+| Framework / 框架 | Flutter (Dart) |
+| Platform / 平台 | Android |
 | UI | Material Design |
+| State / 状态管理 | setState (built-in / 内置) |
+| Storage / 存储 | shared_preferences |
 
-## 环境要求
+---
+
+## Requirements / 环境要求
 
 - Flutter SDK >= 3.x (stable)
 - Dart SDK >= 3.11.4
-- Android SDK（用于构建 Android 应用）
+- Android SDK (for building Android apps / 用于构建 Android 应用)
 
-## 快速开始
+---
+
+## Quick Start / 快速开始
 
 ```bash
-# 安装依赖
+# Install dependencies / 安装依赖
 flutter pub get
 
-# 运行应用
+# Run the app / 运行应用
 flutter run
 ```
 
-## 项目结构
+---
+
+## Project Structure / 项目结构
 
 ```
 naytodo/
-├── lib/            # 应用源代码
-│   └── main.dart   # 入口文件
-├── android/        # Android 平台配置
-├── test/           # 测试代码
-├── pubspec.yaml    # 依赖清单
+├── lib/
+│   ├── main.dart                    # Entry point / 入口文件
+│   ├── models/
+│   │   └── todo_work.dart           # Todo data model / 待办数据模型
+│   ├── services/
+│   │   └── storage_service.dart     # Persistence layer / 持久化层
+│   └── widgets/
+│       └── add_todo_dialog.dart     # Add todo dialog / 添加待办对话框
+├── android/                         # Android platform config / Android 平台配置
+├── test/                            # Tests / 测试代码
+├── pubspec.yaml                     # Dependency manifest / 依赖清单
 └── analysis_options.yaml
 ```
 
-## Git 工作流
 
-本项目遵循 [doc/git-workflow.md](../doc/git-workflow.md) 中定义的 main 单主干 + feature 分支策略。
-
-提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/) 规范，详见 [doc/git-commit-message.md](../doc/git-commit-message.md)。

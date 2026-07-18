@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   List<TodoWork> todos = [];
 
   bool isLoading = true;
+  bool _isDragging = false;
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     final loadedTodos = await StorageService.loadTodos();
     setState(() {
       todos = loadedTodos.isEmpty ? <TodoWork>[
-        TodoWork('待办事项', false)
+        TodoWork(title: '待办事项', isDone: false)
       ] : loadedTodos;
       isLoading = false;
     });
@@ -126,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                   );
                   if (result != null && result.trim().isNotEmpty) {
                     _updateData(() {
-                      todos.add(TodoWork(result.trim(), false));
+                      todos.add(TodoWork(title: result.trim(), isDone: false));
                     });
                   }
                 },
