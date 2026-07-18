@@ -21,10 +21,18 @@ class _HomePageState extends State<HomePage> {
 
   List<TodoWork> todos = [];
 
-  bool isLoading = true;
-  bool _isDragging = false;
+  bool isLoading = true;   // 拖拽中标记，防止拖拽时误触 Checkbox
 
-  @override
+  void _onReorder(int oldIndex, int newIndex) {     // 拖拽回调
+    _updateData(() {
+      if (oldIndex < newIndex) newIndex--;
+      final item = todos.removeAt(oldIndex);
+      todos.insert(newIndex, item);
+    });
+  }
+
+
+   @override
   void initState() {
     super.initState();
     _loadData();
@@ -73,10 +81,31 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
-            child: ListView.separated(
+            child: ReorderableListView.builder(
               itemCount: todos.length,
+              onReorder: _onReorder,
+
+              // 拖拽中的样式
+              proxyDecorator: (child, index, animation) {
+                return AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    return Material(
+                      color: Color.fromARGB(255, 248, 243, 201),
+                      elevation: 8,
+                      shadowColor: Colors.pink.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(8),
+                      child: child,
+                    );
+                  },
+                  child: child,
+                );
+              },
+
+
               itemBuilder: (context, index) {
                 return CheckboxListTile(      // ListView 列表项
+                  key: ValueKey(todos[index].id),
                   title: Text(
                     todos[index].title,
                     style: TextStyle(
@@ -96,18 +125,8 @@ class _HomePageState extends State<HomePage> {
                   activeColor: Colors.pink,
                 );
               },
-              separatorBuilder: (context, index) {
-                return Divider(      // 分隔线
-                  height: 10,
-                  color: Colors.pink,
-                  thickness: 1,
-                  indent: 10,
-                  endIndent: 10,
-                );
-              },
             ),
           ),
-
 
 
           Positioned.fill(      // 添加按钮

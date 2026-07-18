@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 
 class AddTodoDialog extends StatefulWidget {
-  const AddTodoDialog({super.key});
+
+  final String? initialText;
+
+  const AddTodoDialog({super.key, this.initialText});
 
   @override
   State<AddTodoDialog> createState() => _AddTodoDialogState();
@@ -10,7 +13,9 @@ class AddTodoDialog extends StatefulWidget {
 
 
 class _AddTodoDialogState extends State<AddTodoDialog> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(
+    text: widget.initialText ?? '',
+  );
 
   @override
   void dispose() {
@@ -32,8 +37,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
-      title: const Text(
-        '添加待办事项',
+      title: Text(
+        widget.initialText != null ? '编辑待办事项' : '添加待办事项',
         style: TextStyle(
           color: Color(0xFF360516),
           fontSize: 30,
@@ -67,8 +72,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
       actions: [
         TextButton(
           onPressed: _submit,
-          child: const Text(
-            '添加',
+          child: Text(
+            widget.initialText != null ? '保存' : '添加',
             style: TextStyle(
               color: Color(0xFF360516),
               fontSize: 20,

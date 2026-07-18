@@ -18,6 +18,6 @@ class TodoWork {
   factory TodoWork.fromJson(Map<String, dynamic> json) => TodoWork(
     id: json['id'] as String?,
     title: json['title'] as String,
-    isDone: json['isDone'] as bool,
+    isDone: (json['isDone'] as bool?) ?? false,
   );
 }
