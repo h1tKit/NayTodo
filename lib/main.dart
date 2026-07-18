@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:naytodo/widgets/add_todo_dialog.dart';
 import 'package:naytodo/models/todo_work.dart';
 import 'services/storage_service.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -17,11 +18,24 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<TodoWork> todos = [];
+  bool isLoading = true;
+  
+  final Map<String, SlidableController> _slidableControllers = {};
 
-  bool isLoading = true;   // 拖拽中标记，防止拖拽时误触 Checkbox
+  SlidableController _controllerFor(TodoWork todo) {
+    return _slidableControllers.putIfAbsent(todo.id, () => SlidableController(this));
+  }
+
+  @override
+  void dispose() {    // 释放所有 controller，避免内存泄漏
+    for (final c in _slidableControllers.values) {
+      c.dispose();
+    }
+    _slidableControllers.clear();
+    super.dispose();
+  }
 
   void _onReorder(int oldIndex, int newIndex) {     // 拖拽回调
     _updateData(() {
@@ -31,8 +45,25 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _deleteTodo(TodoWork todo) {     // 删除回调 
+    _updateData(() {
+      todos.removeWhere((t) => t.id == todo.id);
+    });
+    _slidableControllers.remove(todo.id)?.dispose();    // 删除项时同步释放它的 controller
+   }
 
-   @override
+  Future<void> _editTodo(TodoWork todo) async {     // 编辑回调
+    final result = await showDialog<String>(
+      context: context,
+      builder: (_) => AddTodoDialog(initialText: todo.title),
+    );
+    if (result != null && result.trim().isNotEmpty) {
+      _updateData(() => todo.title = result.trim());
+    }
+  }
+
+
+  @override
   void initState() {
     super.initState();
     _loadData();
@@ -42,7 +73,10 @@ class _HomePageState extends State<HomePage> {
     final loadedTodos = await StorageService.loadTodos();
     setState(() {
       todos = loadedTodos.isEmpty ? <TodoWork>[
-        TodoWork(title: '待办事项', isDone: false)
+        TodoWork(title: '待办事项示例', isDone: true),
+        TodoWork(title: '左滑编辑', isDone: false),
+        TodoWork(title: '右滑删除', isDone: false),
+        TodoWork(title: '长按拖拽排序', isDone: false)
       ] : loadedTodos;
       isLoading = false;
     });
@@ -81,51 +115,110 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
-            child: ReorderableListView.builder(
-              itemCount: todos.length,
-              onReorder: _onReorder,
+            child: SlidableAutoCloseBehavior(
+              child: ReorderableListView.builder(
+                itemCount: todos.length,
+                onReorder: _onReorder,
+                onReorderStart: (index) {
+                  _slidableControllers[todos[index].id]?.close();
+                },
+                // 拖拽中的样式
+                proxyDecorator: (child, index, animation) {
+                  return AnimatedBuilder(
+                    animation: animation,
+                    builder: (context, child) {
+                      return Material(
+                        color: Color.fromARGB(255, 248, 243, 201),
+                        elevation: 8,
+                        shadowColor: Colors.pink.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(8),
+                        child: child,
+                      );
+                    },
+                    child: child,
+                  );
+                },
 
-              // 拖拽中的样式
-              proxyDecorator: (child, index, animation) {
-                return AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) {
-                    return Material(
-                      color: Color.fromARGB(255, 248, 243, 201),
-                      elevation: 8,
-                      shadowColor: Colors.pink.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(8),
-                      child: child,
-                    );
-                  },
-                  child: child,
-                );
-              },
 
-
-              itemBuilder: (context, index) {
-                return CheckboxListTile(      // ListView 列表项
-                  key: ValueKey(todos[index].id),
-                  title: Text(
-                    todos[index].title,
-                    style: TextStyle(
-                      color: Color(0xFF360516),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                itemBuilder: (context, index) {
+                  final todo = todos[index];
+                  return Slidable(
+                    key: ValueKey(todo.id),
+                    controller: _controllerFor(todo),  // 注入外部 controller，使 overlay 中的拖拽副本共享同一 controller
+                    startActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      extentRatio: 0.25,
+                      children: [
+                        SlidableAction(
+                          onPressed: (_) => _deleteTodo(todo),
+                          icon: Icons.delete,
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ],
                     ),
-                  ),
-                  value: todos[index].isDone,
-                  onChanged: (value) {
-                    _updateData(() {
-                      todos[index].isDone = value!;
-                    });
-                  },
-                  checkboxShape: CircleBorder(),
-                  checkColor: Colors.white,
-                  activeColor: Colors.pink,
-                );
-              },
-            ),
+
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      extentRatio: 0.25,
+                      children: [
+                        SlidableAction(
+                          onPressed: (_) => _editTodo(todo),
+                          icon: Icons.edit,
+                          backgroundColor: Colors.pink,
+                          foregroundColor: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ],
+                    ),
+
+                    // 替换原来的 Container + CheckboxListTile 部分（约 173-193 行）
+                    child: GestureDetector(
+                      onTap: () {
+                        _updateData(() {
+                          todos[index].isDone = !todos[index].isDone;
+                        });
+                      },
+                      child: Container(
+                        color: const Color(0xFFFFF9C4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                todo.title,
+                                style: TextStyle(
+                                  color: Color(0xFF360516),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: todo.isDone ? TextDecoration.lineThrough : null,
+                                  decorationThickness: 2,
+                                  decorationColor: Color(0xFF360516),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Checkbox(
+                              value: todo.isDone,
+                              onChanged: (value) {
+                                _updateData(() {
+                                  todos[index].isDone = value!;
+                                });
+                              },
+                              shape: CircleBorder(),
+                              checkColor: Colors.white,
+                              activeColor: Colors.pink,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  );
+                },
+              ),
+            )
           ),
 
 
