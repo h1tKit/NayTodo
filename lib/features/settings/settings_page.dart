@@ -51,81 +51,89 @@ class SettingsPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          // 主题模式
-          _buildSectionTitle(context, '主题模式'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<AppThemeMode>(
-              segments: const [
-                ButtonSegment(
-                  value: AppThemeMode.light,
-                  label: Text('浅色'),
-                  icon: Icon(Icons.light_mode),
-                ),
-                ButtonSegment(
-                  value: AppThemeMode.dark,
-                  label: Text('深色'),
-                  icon: Icon(Icons.dark_mode),
-                ),
-                ButtonSegment(
-                  value: AppThemeMode.system,
-                  label: Text('跟随系统'),
-                  icon: Icon(Icons.settings_brightness),
-                ),
-              ],
-              selected: {themeStore.mode},
-              onSelectionChanged: (set) => themeStore.setMode(set.first),
-              style: ButtonStyle(
-                visualDensity: VisualDensity.compact,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
+          Positioned.fill(
+            child: Container(
+              color: Theme.of(context).colorScheme.surface,
             ),
           ),
-
-          // 主题色
-          _buildSectionTitle(context, '主题色'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: _seedOptions.map((seed) {
-                final displayColor = _primaryFromSeed(seed, brightness);
-                final isSelected = themeStore.seedColor == seed;
-
-                return GestureDetector(
-                  onTap: () => themeStore.setSeedColor(seed),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: displayColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected
-                            ? Theme.of(context).colorScheme.onSurface
-                            : Colors.transparent,
-                        width: 3,
-                      ),
-                      boxShadow: isSelected
-                          ? [BoxShadow(color: displayColor.withValues(alpha: 0.5), blurRadius: 8)]
-                          : null,
+          ListView(
+            children: [
+              // 主题模式
+              _buildSectionTitle(context, '主题模式'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SegmentedButton<AppThemeMode>(
+                  segments: const [
+                    ButtonSegment(
+                      value: AppThemeMode.light,
+                      label: Text('浅色'),
+                      icon: Icon(Icons.light_mode),
                     ),
-                    child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white, size: 20)
-                        : null,
+                    ButtonSegment(
+                      value: AppThemeMode.dark,
+                      label: Text('深色'),
+                      icon: Icon(Icons.dark_mode),
+                    ),
+                    ButtonSegment(
+                      value: AppThemeMode.system,
+                      label: Text('跟随系统'),
+                      icon: Icon(Icons.settings_brightness),
+                    ),
+                  ],
+                  selected: {themeStore.mode},
+                  onSelectionChanged: (set) => themeStore.setMode(set.first),
+                  style: ButtonStyle(
+                    visualDensity: VisualDensity.compact,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                );
-              }).toList(),
-            ),
-          ),
+                ),
+              ),
 
-          const SizedBox(height: 32),
-        ],
-      ),
+              // 主题色
+              _buildSectionTitle(context, '主题色'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: _seedOptions.map((seed) {
+                    final displayColor = _primaryFromSeed(seed, brightness);
+                    final isSelected = themeStore.seedColor == seed;
+
+                    return GestureDetector(
+                      onTap: () => themeStore.setSeedColor(seed),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: displayColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.onSurface
+                                : Colors.transparent,
+                            width: 3,
+                          ),
+                          boxShadow: isSelected
+                              ? [BoxShadow(color: displayColor.withValues(alpha: 0.5), blurRadius: 8)]
+                              : null,
+                        ),
+                        child: isSelected
+                            ? const Icon(Icons.check, color: Colors.white, size: 20)
+                            : null,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
+        ]
+      ),  
     );
   }
 }

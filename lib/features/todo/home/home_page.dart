@@ -45,12 +45,27 @@ class _HomeScaffold extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : const TodoListView(),
-          Align(
-            alignment: const Alignment(0.78, 0.82),
-            child: const AddTodoFAB(),
+          // 背景色填满全屏（含导航栏后方）
+          Positioned.fill(
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
+          ),
+          // 交互内容避开导航栏
+          SafeArea(
+            top: false,
+            bottom: true,
+            child: Stack(
+              children: [
+                isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : const TodoListView(),
+                Align(
+                  alignment: const Alignment(0.78, 0.82),
+                  child: const AddTodoFAB(),
+                ),
+              ],
+            ),
           ),
         ],
       ),

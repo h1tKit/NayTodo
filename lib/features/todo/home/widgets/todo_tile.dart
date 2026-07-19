@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:naytodo/core/theme/app_colors.dart';
 import 'package:naytodo/data/models/todo_work.dart';
 import 'package:naytodo/shared/widgets/add_todo_dialog.dart';
 import 'package:naytodo/shared/widgets/slidable_controller_pool.dart';
