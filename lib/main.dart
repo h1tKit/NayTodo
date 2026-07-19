@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: Colors.pink,
+        backgroundColor: const Color(0xFFE91E63),
       ),
       body: Stack(
         children: [
@@ -128,10 +128,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     animation: animation,
                     builder: (context, child) {
                       return Material(
-                        color: Color.fromARGB(255, 248, 243, 201),
+                        color: Color(0xFFFFF9C4),
                         elevation: 8,
                         shadowColor: Colors.pink.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(12),
+                        clipBehavior: Clip.antiAlias,
                         child: child,
                       );
                     },
@@ -173,7 +174,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ],
                     ),
 
-                    // 替换原来的 Container + CheckboxListTile 部分（约 173-193 行）
                     child: GestureDetector(
                       onTap: () {
                         _updateData(() {
@@ -181,7 +181,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         });
                       },
                       child: Container(
-                        color: const Color(0xFFFFF9C4),
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                         child: Row(
                           children: [
