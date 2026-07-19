@@ -19,7 +19,7 @@ class NayTodoApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (c) => TodoStore(c.read<TodoRepository>())..load(),
         ),
-        ChangeNotifierProvider(create: (_) => ThemeStore()),
+        ChangeNotifierProvider(create: (_) => ThemeStore()..load()),
       ],
       child: SlidableControllerPool(
         child: Consumer<ThemeStore>(
