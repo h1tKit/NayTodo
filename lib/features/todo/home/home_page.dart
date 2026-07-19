@@ -20,9 +20,16 @@ class _HomeScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLoading = context.select<TodoStore, bool>((s) => s.isLoading);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NayTodo'),
+        title: const Text(
+          'NayTodo',
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -36,10 +43,17 @@ class _HomeScaffold extends StatelessWidget {
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : const TodoListView(),
-      floatingActionButton: const AddTodoFAB(),
+      body: Stack(
+        children: [
+          isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : const TodoListView(),
+          Align(
+            alignment: const Alignment(0.78, 0.82),
+            child: const AddTodoFAB(),
+          ),
+        ],
+      ),
     );
   }
 }
