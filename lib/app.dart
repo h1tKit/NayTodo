@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:naytodo/core/theme/app_theme.dart';
 import 'package:naytodo/data/repositories/todo_repository.dart';
 import 'package:naytodo/data/services/storage_service.dart';
 import 'package:naytodo/features/todo/home/home_page.dart';
 import 'package:naytodo/shared/widgets/slidable_controller_pool.dart';
 import 'package:naytodo/state/todo_store.dart';
+import 'package:naytodo/state/theme_store.dart';
 
 class NayTodoApp extends StatelessWidget {
   const NayTodoApp({super.key});
@@ -19,12 +19,19 @@ class NayTodoApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (c) => TodoStore(c.read<TodoRepository>())..load(),
         ),
+        ChangeNotifierProvider(create: (_) => ThemeStore()),
       ],
       child: SlidableControllerPool(
-        child: MaterialApp(
-          title: 'NayTodo',
-          theme: AppTheme.light,
-          home: const HomePage(),
+        child: Consumer<ThemeStore>(
+          builder: (context, themeStore, _) {
+            return MaterialApp(
+              title: 'NayTodo',
+              theme: themeStore.lightTheme,
+              darkTheme: themeStore.darkTheme,
+              themeMode: themeStore.flutterThemeMode,
+              home: const HomePage(),
+            );
+          },
         ),
       ),
     );

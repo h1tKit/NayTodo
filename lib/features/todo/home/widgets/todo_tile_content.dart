@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:naytodo/core/theme/app_colors.dart';
 import 'package:naytodo/data/models/todo_work.dart';
 
 class TodoTileContent extends StatelessWidget {
@@ -13,6 +12,8 @@ class TodoTileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onToggle,
       child: Container(
@@ -22,13 +23,15 @@ class TodoTileContent extends StatelessWidget {
             Expanded(
               child: Text(
                 todo.title,
-                style: TextStyle(
-                  color: AppColors.text,
+                style: TextStyle(           // 代办项字体样式
+                  color: todo.isDone
+                      ? colorTheme.onSurface.withValues(alpha: 0.38)
+                      : colorTheme.onSurface,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   decoration: todo.isDone ? TextDecoration.lineThrough : null,
                   decorationThickness: 2,
-                  decorationColor: AppColors.text,
+                  decorationColor: colorTheme.onSurface.withValues(alpha: 0.38)
                 ),
               ),
             ),
@@ -37,8 +40,8 @@ class TodoTileContent extends StatelessWidget {
               value: todo.isDone,
               onChanged: (_) => onToggle(),
               shape: const CircleBorder(),
-              checkColor: Colors.white,
-              activeColor: AppColors.primary,
+              checkColor: colorTheme.surface,
+              activeColor: colorTheme.primary,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ],

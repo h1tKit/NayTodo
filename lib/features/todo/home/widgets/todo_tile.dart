@@ -16,9 +16,12 @@ class TodoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final store = context.read<TodoStore>();
     final pool = SlidableControllerPool.of(context);
+    final colorTheme = Theme.of(context).colorScheme;
+
     return Slidable(
       key: ValueKey(todo.id),
       controller: pool.of(todo.id),
+      // 右滑删除
       startActionPane: ActionPane(
         motion: const ScrollMotion(),
         extentRatio: 0.25,
@@ -26,12 +29,13 @@ class TodoTile extends StatelessWidget {
           SlidableAction(
             onPressed: (_) => store.deleteTodo(todo.id),
             icon: Icons.delete,
-            backgroundColor: AppColors.delete,
+            backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             borderRadius: BorderRadius.circular(8),
           ),
         ],
       ),
+      // 左滑编辑
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
         extentRatio: 0.25,
@@ -39,8 +43,8 @@ class TodoTile extends StatelessWidget {
           SlidableAction(
             onPressed: (_) => _edit(context, store),
             icon: Icons.edit,
-            backgroundColor: AppColors.edit,
-            foregroundColor: Colors.white,
+            backgroundColor: colorTheme.primary,
+            foregroundColor: colorTheme.onPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
         ],

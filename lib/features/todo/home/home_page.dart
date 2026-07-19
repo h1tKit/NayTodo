@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:naytodo/features/settings/settings_page.dart';
 import 'package:naytodo/state/todo_store.dart';
 import 'widgets/add_todo_fab.dart';
 import 'widgets/todo_list_view.dart';
@@ -20,7 +21,21 @@ class _HomeScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final isLoading = context.select<TodoStore, bool>((s) => s.isLoading);
     return Scaffold(
-      appBar: AppBar(title: const Text('NayTodo')),
+      appBar: AppBar(
+        title: const Text('NayTodo'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : const TodoListView(),

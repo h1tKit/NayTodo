@@ -30,17 +30,19 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.initialText != null;
+    final colorTheme = Theme.of(context).colorScheme;
+
     return AlertDialog(
-      backgroundColor: AppColors.background,
+      backgroundColor: colorTheme.surfaceContainerHigh,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
       title: Text(
         isEdit ? '编辑待办事项' : '添加待办事项',
-        style: const TextStyle(
-          color: AppColors.text,
-          fontSize: 30,
+        style: TextStyle(
+          color: colorTheme.primary,
           fontWeight: FontWeight.bold,
+          fontSize: 30,
         ),
       ),
       content: SizedBox(
@@ -50,17 +52,17 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
           children: [
             TextField(
               controller: _controller,
-              style: const TextStyle(
-                color: AppColors.text,
+              style: TextStyle(
+                color: colorTheme.onSurface,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: '待办事项',
                 labelStyle: TextStyle(
-                  color: AppColors.label,
-                  fontSize: 20,
+                  color: colorTheme.onSurfaceVariant,
                   fontWeight: FontWeight.normal,
+                  fontSize: 20,
                 ),
               ),
             ),
@@ -72,8 +74,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
           onPressed: _submit,
           child: Text(
             isEdit ? '保存' : '添加',
-            style: const TextStyle(
-              color: AppColors.text,
+            style: TextStyle(
+              color: colorTheme.primary,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
