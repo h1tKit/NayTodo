@@ -40,6 +40,10 @@ app.*.map.json
 # Local environment
 .env
 
+# Android signing keys — MUST NOT be committed
+*.keystore
+*.jks
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
