@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:naytodo/core/theme/app_colors.dart';
 
 class AddTodoDialog extends StatefulWidget {
-
   final String? initialText;
-
   const AddTodoDialog({super.key, this.initialText});
 
   @override
   State<AddTodoDialog> createState() => _AddTodoDialogState();
 }
-
 
 class _AddTodoDialogState extends State<AddTodoDialog> {
   late final _controller = TextEditingController(
@@ -32,15 +29,16 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isEdit = widget.initialText != null;
     return AlertDialog(
-      backgroundColor: Color(0xFFFFF9C4),
+      backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
       title: Text(
-        widget.initialText != null ? '编辑待办事项' : '添加待办事项',
-        style: TextStyle(
-          color: Color(0xFF360516),
+        isEdit ? '编辑待办事项' : '添加待办事项',
+        style: const TextStyle(
+          color: AppColors.text,
           fontSize: 30,
           fontWeight: FontWeight.bold,
         ),
@@ -52,15 +50,15 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
           children: [
             TextField(
               controller: _controller,
-              style: TextStyle(
-                color: Color(0xFF360516),
+              style: const TextStyle(
+                color: AppColors.text,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
               decoration: const InputDecoration(
                 labelText: '待办事项',
                 labelStyle: TextStyle(
-                  color: Color.fromARGB(255, 108, 68, 82),
+                  color: AppColors.label,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                 ),
@@ -73,9 +71,9 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
         TextButton(
           onPressed: _submit,
           child: Text(
-            widget.initialText != null ? '保存' : '添加',
-            style: TextStyle(
-              color: Color(0xFF360516),
+            isEdit ? '保存' : '添加',
+            style: const TextStyle(
+              color: AppColors.text,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
