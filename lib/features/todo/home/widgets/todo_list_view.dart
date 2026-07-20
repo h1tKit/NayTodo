@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:naytodo/core/theme/app_colors.dart';
 import 'package:naytodo/shared/widgets/slidable_controller_pool.dart';
 import 'package:naytodo/state/todo_store.dart';
 import 'todo_tile.dart';
@@ -36,9 +35,9 @@ class TodoListView extends StatelessWidget {
       animation: animation,
       builder: (context, child) {
         return Material(
-          color: AppColors.background,
+          color: Theme.of(context).scaffoldBackgroundColor,
           elevation: 8,
-          shadowColor: AppColors.edit.withValues(alpha: 0.3),
+          shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
           child: child,
