@@ -25,49 +25,32 @@ class _HomeScaffold extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'NayTodo',
-          style: TextStyle(
-            fontSize: 40,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
-                ),
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
             },
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          // 背景色填满全屏（含导航栏后方）
-          Positioned.fill(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        top: false,
+        child: Stack(
+          children: [
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : const TodoListView(),
+            Align(
+              alignment: const Alignment(0.78, 0.82),
+              child: const AddTodoFAB(),
             ),
-          ),
-          // 交互内容避开导航栏
-          SafeArea(
-            top: false,
-            bottom: true,
-            child: Stack(
-              children: [
-                isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : const TodoListView(),
-                Align(
-                  alignment: const Alignment(0.78, 0.82),
-                  child: const AddTodoFAB(),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -93,9 +76,9 @@ class _ErrorSnackListenerState extends State<_ErrorSnackListener> {
       _shown = error;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          SnackBar(content: Text(error)),
-        );
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(error)));
         context.read<TodoStore>().clearError();
       });
     }

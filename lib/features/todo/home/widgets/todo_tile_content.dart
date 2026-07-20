@@ -23,7 +23,8 @@ class TodoTileContent extends StatelessWidget {
             Expanded(
               child: Text(
                 todo.title,
-                style: TextStyle(           // 代办项字体样式
+                style: TextStyle(
+                  // 代办项字体样式
                   color: todo.isDone
                       ? colorTheme.onSurface.withValues(alpha: 0.38)
                       : colorTheme.onSurface,
@@ -31,7 +32,7 @@ class TodoTileContent extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   decoration: todo.isDone ? TextDecoration.lineThrough : null,
                   decorationThickness: 2,
-                  decorationColor: colorTheme.onSurface.withValues(alpha: 0.38)
+                  decorationColor: colorTheme.onSurface.withValues(alpha: 0.38),
                 ),
               ),
             ),

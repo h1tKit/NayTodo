@@ -21,10 +21,8 @@ class TodoListView extends StatelessWidget {
           onReorder: store.reorder,
           onReorderStart: (index) => pool.close(todos[index].id),
           proxyDecorator: _proxyDecorator,
-          itemBuilder: (context, index) => TodoTile(
-            key: ValueKey(todos[index].id),
-            todo: todos[index],
-          ),
+          itemBuilder: (context, index) =>
+              TodoTile(key: ValueKey(todos[index].id), todo: todos[index]),
         ),
       ),
     );
@@ -35,9 +33,11 @@ class TodoListView extends StatelessWidget {
       animation: animation,
       builder: (context, child) {
         return Material(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).colorScheme.surface,
           elevation: 8,
-          shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+          shadowColor: Theme.of(
+            context,
+          ).colorScheme.primary.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
           child: child,

@@ -92,13 +92,16 @@ void main() {
     expect(store.todos.every((t) => t.title != 'x'), isTrue);
   });
 
-  test('persistence failure rolls back in-memory change and sets error', () async {
-    final failing = _FailingStorage();
-    final s = TodoStore(TodoRepository(failing));
-    await s.load();
-    final len = s.todos.length;
-    await s.addTodo('不会留下');
-    expect(s.todos.length, len);
-    expect(s.error, isNotNull);
-  });
+  test(
+    'persistence failure rolls back in-memory change and sets error',
+    () async {
+      final failing = _FailingStorage();
+      final s = TodoStore(TodoRepository(failing));
+      await s.load();
+      final len = s.todos.length;
+      await s.addTodo('不会留下');
+      expect(s.todos.length, len);
+      expect(s.error, isNotNull);
+    },
+  );
 }

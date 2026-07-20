@@ -42,23 +42,23 @@ class TodoStore extends ChangeNotifier {
       _mutate((t) => t.add(TodoWork(title: title)));
 
   Future<void> toggleDone(String id) => _mutate((t) {
-        final i = t.indexWhere((e) => e.id == id);
-        if (i != -1) t[i].isDone ^= true;
-      });
+    final i = t.indexWhere((e) => e.id == id);
+    if (i != -1) t[i].isDone ^= true;
+  });
 
   Future<void> deleteTodo(String id) =>
       _mutate((t) => t.removeWhere((e) => e.id == id));
 
   Future<void> editTodo(String id, String title) => _mutate((t) {
-        final i = t.indexWhere((e) => e.id == id);
-        if (i != -1) t[i].title = title;
-      });
+    final i = t.indexWhere((e) => e.id == id);
+    if (i != -1) t[i].title = title;
+  });
 
   Future<void> reorder(int oldIndex, int newIndex) => _mutate((t) {
-        if (oldIndex < newIndex) newIndex--;
-        final item = t.removeAt(oldIndex);
-        t.insert(newIndex, item);
-      });
+    if (oldIndex < newIndex) newIndex--;
+    final item = t.removeAt(oldIndex);
+    t.insert(newIndex, item);
+  });
 
   Future<void> _mutate(void Function(List<TodoWork> todos) mutate) async {
     final snapshot = List<TodoWork>.of(_todos);

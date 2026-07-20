@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:naytodo/core/theme/app_colors.dart';
 
 class AddTodoDialog extends StatefulWidget {
   final String? initialText;
@@ -34,9 +33,7 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
     return AlertDialog(
       backgroundColor: colorTheme.surfaceContainerHigh,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       title: Text(
         isEdit ? '编辑待办事项' : '添加待办事项',
         style: TextStyle(
