@@ -67,6 +67,13 @@ class ThemeStore extends ChangeNotifier {
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: Colors.transparent,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: FadeForwardsPageTransitionsBuilder(
+            backgroundColor: Colors.transparent,
+          ),
+        },
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.primary,
         surfaceTintColor: Colors.transparent,

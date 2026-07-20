@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naytodo/state/theme_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,19 @@ void main() {
     store.setBackgroundMode(AppBackgroundMode.image);
 
     expect(store.backgroundMode, AppBackgroundMode.solid);
+  });
+
+  test('Android route transitions keep the app background visible', () {
+    final builder = ThemeStore()
+        .lightTheme
+        .pageTransitionsTheme
+        .builders[TargetPlatform.android];
+
+    expect(builder, isA<FadeForwardsPageTransitionsBuilder>());
+    expect(
+      (builder! as FadeForwardsPageTransitionsBuilder).backgroundColor,
+      Colors.transparent,
+    );
   });
 
   test('overlay preview clamps values and persists on demand', () async {
